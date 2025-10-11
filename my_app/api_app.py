@@ -12,7 +12,7 @@ import sqlite3
 
 # from database import initialize_database, add_new_task, get_credentials, add_credentials, get_tasks_by_status, update_task_status, update_admin_response, update_task_response, get_auto_reply_setting, update_auto_reply_setting, get_chat_history
 from database import initialize_database, add_new_task, get_credentials, add_credentials, get_tasks_by_status, update_task_status, update_admin_response, update_task_response, get_auto_reply_setting, update_auto_reply_setting, get_chat_history, get_chat_threads_by_status
-from ai_processor import process_new_tasks
+from ai_processor import process_new_tasks,process_new_tasks_using_sql_and_RAG
 # from database import initialize_database, add_new_task, get_credentials, add_credentials, get_tasks_by_status, update_task_status, update_admin_response, update_task_response, get_auto_reply_setting, update_auto_reply_setting
 # --- 1. Flask App and Database Setup ---
 load_dotenv()
@@ -205,7 +205,8 @@ def callback(user_id):
                 
                 try:
                     # เรียกใช้ฟังก์ชันจาก ai_processor.py โดยตรง
-                    process_new_tasks(user_id, line_user_id, user_message, task_id)
+                    # process_new_tasks(user_id, line_user_id, user_message, task_id)
+                    process_new_tasks_using_sql_and_RAG(user_id, line_user_id, user_message, task_id)
 
                 except Exception as e:
                     print(f"Error during AI processing: {e}")

@@ -1,11 +1,22 @@
+# Core Frameworks
 streamlit
-python-dotenv
-langchain
-langchain-google-genai
-langchain-community
-langchain-core
-langchain-ollama
 Flask
 line-bot-sdk
+# AI/LLM/RAG Components
+
+# LangChain Dependencies
+langchain
+langchain-core
+langchain-community 
+
+# LLM Providers and Embeddings
+langchain-google-genai
+langchain-ollama
+
+# ChromaDB (Vector Database)
+chromadb 
+
+# Utilities and Database
 python-dotenv
-google-genai
+google-genai # Redundant, but harmless (Google AI SDK)
+# sqlite3 comes built-in with Python, so no need to install.

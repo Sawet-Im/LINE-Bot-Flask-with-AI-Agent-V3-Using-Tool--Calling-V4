@@ -89,19 +89,6 @@ def initialize_database():
             )
         ''')
 
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS knowledge_base (
-                kb_id INTEGER PRIMARY KEY,
-                store_id INTEGER NOT NULL,
-                question_or_topic TEXT NOT NULL,
-                answer_or_detail TEXT NOT NULL,
-                FOREIGN KEY(store_id) REFERENCES stores(store_id)
-            )
-        ''')
-
-        # Add initial data if tables are empty
-        seed_data(conn, cursor)
-
         # Add initial data if tables are empty
         seed_data(conn, cursor)
 
@@ -190,25 +177,6 @@ def seed_data(conn, cursor):
             ('COFFEE_DEAL', 'ซื้อกาแฟแก้วที่ 2 ลด 50%', 6, 3, '2025-09-15', '2025-11-15')
         ]
         cursor.executemany("INSERT INTO promotions (promo_code, description, menu_id, store_id, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?)", promotions_data)
-        conn.commit()
-    
-    cursor.execute("SELECT COUNT(*) FROM knowledge_base")
-    if cursor.fetchone()[0] == 0:
-        knowledge_data = [
-            # ข้อมูลสำหรับ store_id = 1 (สาขาพระราม 9)
-            (1, 'นโยบายการคืนสินค้า', 'สินค้าที่ซื้อแล้วไม่สามารถคืนได้ ยกเว้นสินค้ามีตำหนิ หรือผิดออเดอร์ ซึ่งต้องแจ้งภายใน 1 ชั่วโมงหลังรับสินค้า'),
-            (1, 'เวลาเปิด-ปิดร้าน', 'ร้านเปิดทำการทุกวัน ตั้งแต่เวลา 10:00 น. ถึง 21:00 น.'),
-            (1, 'การรับประกันความสดใหม่', 'เรารับประกันความสดใหม่ของอาหาร หากมีปัญหาด้านรสชาติ โปรดแจ้งเราทันทีเพื่อทำการแก้ไข'),
-            
-            # ข้อมูลสำหรับ store_id = 2 (สาขาสุขุมวิท 21)
-            (2, 'วิธีการสั่งจองโต๊ะ', 'คุณสามารถโทรจองโต๊ะล่วงหน้าได้ที่เบอร์ 02-123-4567 หรือจองผ่าน Line OA'),
-            (2, 'รับบัตรเครดิตหรือไม่', 'เรายินดีรับบัตรเครดิต Visa และ Mastercard ทุกประเภท ไม่มีค่าธรรมเนียมเพิ่มเติม'),
-            
-            # ข้อมูลสำหรับ store_id = 3 (สาขาพญาไท)
-            (3, 'มี Wi-Fi ให้บริการไหม', 'มีบริการ Wi-Fi ฟรีสำหรับลูกค้าทุกคน รหัสผ่านคือ "PhayathaiFreeWiFi"'),
-            (3, 'ที่จอดรถ', 'มีบริการที่จอดรถฟรีบริเวณด้านหลังอาคาร CP Tower รองรับได้ 20 คัน'),
-        ]
-        cursor.executemany("INSERT INTO knowledge_base (store_id, question_or_topic, answer_or_detail) VALUES (?, ?, ?)", knowledge_data)
         conn.commit()
     
 def add_credentials(user_id, channel_secret, channel_access_token):

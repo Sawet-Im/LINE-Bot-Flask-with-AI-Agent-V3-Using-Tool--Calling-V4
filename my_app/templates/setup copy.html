@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตั้งค่า AI Agent สำหรับร้านค้า</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-lg">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">ตั้งค่า AI Agent สำหรับร้านค้า</h1>
+        <p class="text-center text-gray-500 mb-6">กรุณากรอกข้อมูล Channel API ของร้านค้าของคุณ</p>
+
+        <form id="credentials-form" class="space-y-4">
+            <div>
+                <label for="channel-secret" class="block text-sm font-medium text-gray-700">Channel Secret</label>
+                <input type="password" id="channel-secret" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            </div>
+            <div>
+                <label for="channel-access-token" class="block text-sm font-medium text-gray-700">Channel Access Token</label>
+                <input type="password" id="channel-access-token" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            </div>
+            <div class="flex items-center justify-center">
+                <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    บันทึกและสร้าง Webhook
+                </button>
+            </div>
+        </form>
+
+        <div id="status-message" class="mt-6 text-center text-sm font-medium hidden"></div>
+        <div id="webhook-url-container" class="mt-6 hidden">
+            <p class="text-sm font-medium text-gray-700">Webhook URL ของคุณ:</p>
+            <div class="mt-2 flex rounded-md shadow-sm">
+                <input type="text" id="webhook-url" readonly class="flex-1 block w-full rounded-l-md px-3 py-2 border border-gray-300 bg-gray-50 cursor-text">
+                <button id="copy-button" class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-r-md bg-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-300">
+                    คัดลอก
+                </button>
+            </div>
+            <p class="mt-2 text-xs text-gray-500">
+                โปรดนำ URL นี้ไปใส่ในช่อง <b>Webhook URL</b> บน LINE Developers Console ของคุณ
+            </p>
+
+            <a href="#" id="dashboard-link" class="hidden w-full mt-4 inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                เข้าสู่ Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Get a unique user ID and store it in localStorage
+        let userId = localStorage.getItem('uniqueUserId');
+        if (!userId) {
+            userId = crypto.randomUUID();
+            localStorage.setItem('uniqueUserId', userId);
+        }
+
+        // Handle form submission
+        const form = document.getElementById('credentials-form');
+        const statusMessage = document.getElementById('status-message');
+        const webhookUrlContainer = document.getElementById('webhook-url-container');
+        const webhookUrlInput = document.getElementById('webhook-url');
+        const copyButton = document.getElementById('copy-button');
+        const dashboardLink = document.getElementById('dashboard-link'); // Get the new button
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const channelSecret = document.getElementById('channel-secret').value;
+            const channelAccessToken = document.getElementById('channel-access-token').value;
+
+            statusMessage.textContent = 'กำลังบันทึกข้อมูลและอัปเดต Webhook...';
+            statusMessage.className = 'mt-6 text-center text-sm font-medium block text-blue-500';
+            webhookUrlContainer.classList.add('hidden');
+            dashboardLink.classList.add('hidden'); // Hide dashboard button initially
+
+            try {
+                const response = await fetch(`/save_credentials/${userId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ channelSecret, channelAccessToken })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    statusMessage.textContent = data.message;
+                    statusMessage.className = 'mt-6 text-center text-sm font-medium block text-green-500';
+                    webhookUrlInput.value = data.webhook_url;
+                    webhookUrlContainer.classList.remove('hidden');
+
+                    // Show the dashboard button and set its link
+                    dashboardLink.href = `/dashboard/${userId}`;
+                    dashboardLink.classList.remove('hidden');
+                } else {
+                    statusMessage.textContent = `เกิดข้อผิดพลาด: ${data.message}`;
+                    statusMessage.className = 'mt-6 text-center text-sm font-medium block text-red-500';
+                }
+            } catch (error) {
+                statusMessage.textContent = 'เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์';
+                statusMessage.className = 'mt-6 text-center text-sm font-medium block text-red-500';
+                console.error('Fetch error:', error);
+            }
+        });
+
+        // Handle copy button click
+        copyButton.addEventListener('click', () => {
+            const url = webhookUrlInput.value;
+            if (url) {
+                navigator.clipboard.writeText(url).then(() => {
+                    const originalText = copyButton.textContent;
+                    copyButton.textContent = 'คัดลอกแล้ว!';
+                    setTimeout(() => { copyButton.textContent = originalText; }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

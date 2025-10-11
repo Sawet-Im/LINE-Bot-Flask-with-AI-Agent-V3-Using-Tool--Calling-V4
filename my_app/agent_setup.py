@@ -15,7 +15,6 @@ from database import get_store_info_direct
 
 load_dotenv()
 
-
 def create_agent_prefix(store_id, store_name, user_id):
     # ปรับ AGENT_PREFIX ให้เป็น f-string เพื่อใส่ค่าตัวแปร
     
