@@ -20,11 +20,12 @@
 │   ├── api_app.py
 │   ├── admin_app.py
 │   ├── ai_processor.py
-│   ├── database.py       # เพิ่มตาราง knowledge_base
-│   └── agent_setup.py    # เพิ่ม RAG Logic, initialize_rag_retriever
-├── chroma_db_data/       # 🟢 โฟลเดอร์ใหม่: สำหรับเก็บ Index ของ ChromaDB
-├── .env                  # เพิ่ม GOOGLE_API_KEY, CHROMA_DB_DIR
-├── requirements.txt      # เพิ่ม chromadb, langchain-google-genai
+│   ├── database.py                       # เพิ่มตาราง knowledge_base
+│   ├── agent_setup.py                    
+│   └── agent_setup_sql_agent_and_rag.py  # เพิ่ม RAG Logic, initialize_rag_retriever 
+├── chroma_db_data/                       # 🟢 โฟลเดอร์ใหม่: สำหรับเก็บ Index ของ ChromaDB
+├── .env                                  # เพิ่ม GOOGLE_API_KEY, CHROMA_DB_DIR
+├── requirements.txt                      # เพิ่ม chromadb, langchain-google-genai
 └── README.md
 ```
 
@@ -77,11 +78,11 @@ OLLAMA_HOST="OLLAMA_URL"
 **`database.py`** | เพิ่มตาราง **`knowledge_base`** | เป็นแหล่งข้อมูลความรู้หลัก (Source of Truth) ก่อนเข้า ChromaDB |
 **`requirements.txt`** | เพิ่ม `chromadb`, `langchain-google-genai` | ติดตั้งไลบรารีที่จำเป็นสำหรับ RAG |
 **`.env`** | เพิ่ม `GOOGLE_API_KEY` | กำหนด API Key สำหรับ Gemini Embeddings และ LLM |
-**`agent_setup.py`** | เพิ่ม RAG Logic, ซ่อนตาราง, ปรับ Prompt | กำหนด Tool, สร้าง Retriever และ **บังคับ Agent ให้ใช้ RAG** |
+**`agent_setup_sql_agent_and_rag.py`** | เพิ่ม RAG Logic, ซ่อนตาราง, ปรับ Prompt | กำหนด Tool, สร้าง Retriever และ **บังคับ Agent ให้ใช้ RAG** |
 
 ### 4.2 การเตรียม RAG Retriever (Indexing ด้วย ChromaDB)
 
-ในฟังก์ชัน `initialize_rag_retriever` (ใน `agent_setup.py`):
+ในฟังก์ชัน `initialize_rag_retriever` (ใน `agent_setup_sql_agent_and_rag.py`):
 
 1. **ดึงข้อมูล (Load Data):** ดึงข้อมูลทั้งหมดจากตาราง **`knowledge_base`** ของ SQLite ที่ตรงกับ `store_id` (Source of Truth)
 2. **Indexing:** แปลงข้อมูล (ข้อความ) ให้เป็น Vector โดยใช้ `GoogleGenerativeAIEmbeddings`
