@@ -96,4 +96,4 @@ OLLAMA_HOST="OLLAMA_URL"
 | **Agent Run** | LLM ตัดสินใจเรียก `knowledge_base_search` | **ToolCall:**`name='knowledge_base_search', input={'query': 'ที่อยู่ร้าน'}` | - |
 | **Observation** | RAG Tool รันและคืนค่า Document | **Observation:**`[('knowledge_base_search', 'Document(page_content="รายละเอียด: ร้านตั้งอยู่ ถ.สีลม ซ.5")')]` | - |
 | **Final Result** | LLM สร้างคำตอบสุดท้าย | `response['output'] = 'ร้านของเราตั้งอยู่ที่ถนนสีลม ซอย 5 ค่ะ'` | `final_response_message` = 'ร้านของเราตั้งอยู่ที่ถนนสีลม ซอย 5 ค่ะ' **`tool_or_sql_command`** = **'Tool: knowledge_base_search (Query: ที่อยู่ร้าน)'** |
-# LINE-Bot-Flask-with-AI-Agent-V3-Using-Tool--Calling-V4
+
