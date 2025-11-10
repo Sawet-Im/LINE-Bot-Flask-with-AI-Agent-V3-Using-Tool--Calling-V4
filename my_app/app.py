@@ -6,7 +6,8 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.agents import AgentFinish, AgentAction
 
 # Import functions from other files
-from database import initialize_database, get_open_stores, DB_FILE_NAME, log_to_database
+# from database import initialize_database, get_open_stores, DB_FILE_NAME, log_to_database
+from database import initialize_database, DB_FILE_NAME
 from agent_setup import initialize_sql_agent
 
 # --- Page Setup ---

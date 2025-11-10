@@ -8,6 +8,7 @@ from langchain_community.utilities import SQLDatabase
 from langchain_community.agent_toolkits import SQLDatabaseToolkit
 from langchain_community.agent_toolkits.sql.base import create_sql_agent
 from langchain.memory import ConversationBufferMemory
+# from langchain_core.chat_history import ConversationBufferMemory
 from history_utils import load_history_from_db 
 from langchain.agents import AgentExecutor
 from database import get_store_info_direct 
