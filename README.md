@@ -59,7 +59,7 @@ BASE_URL="NGROK_URL"
 OLLAMA_HOST="OLLAMA_URL"
 ```
 
-## 3.3. โครงสร้าง Agent
+# 4. โครงสร้าง Agent
 | ส่วนประกอบ | ชื่อฟังก์ชัน/คลาส | หน้าที่หลักโดยละเอียด |
 | --- | --- | --- |
 | **LLM (สมอง)** | `ChatGoogleGenerativeAI` | ทำการ **Classification** (ตัดสินใจว่าจะใช้ Tool ไหนจาก Schema ที่ได้รับ) และ **Reasoning** (สร้างคำตอบสุดท้ายที่สละสลวย) |
@@ -70,7 +70,7 @@ OLLAMA_HOST="OLLAMA_URL"
 | **Prompt** | `ChatPromptTemplate` | กำหนด **System Instruction** (กฎและตรรกะทางธุรกิจ) โดยเน้นไปที่ **ตรรกะทางธุรกิจ (Business Logic)** และ **พฤติกรรมการตอบกลับ (Behavior)**โดยลดรายละเอียดด้านเทคนิคลง |
 
 
-# 4. การไหลของข้อมูล
+# 5. การไหลของข้อมูล
 
 การไหลของข้อมูลในฟังก์ชัน initialize_native_tool_calling_agent
 | ขั้นตอน | ฟังก์ชัน/ตัวแปร | Input | Output / ผลลัพธ์ |
@@ -81,7 +81,7 @@ OLLAMA_HOST="OLLAMA_URL"
 | **4. Executor Creation** | `AgentExecutor()` | `agent`, `final_tools`, `memory` | **`agent_executor`** (Agent ที่พร้อมใช้งาน) |
 
 
-## 5. ตัวอย่างการไหลข้อมูลการเรียก SQL Tool (เมนู)
+## 5.1 ตัวอย่างการไหลข้อมูลการเรียก SQL Tool (เมนู)
 | ขั้นตอน | ข้อมูล Input/Action | การไหลของข้อมูลใน `response['intermediate_steps']` | ผลลัพธ์สุดท้ายที่บันทึก |
 | --- | --- | --- | --- |
 | **Input** | `"มีเมนูผัดไทยราคาเท่าไหร่"` | - | - |
@@ -89,7 +89,7 @@ OLLAMA_HOST="OLLAMA_URL"
 | **Observation** | SQL Tool รันและคืนค่า `[{'price': 65.0}]` | **Observation:** `[('sql_db_query', 'Result: [{'price': 65.0}]')]` | - |
 | **Final Result** | LLM สร้างคำตอบสุดท้าย | `response['output'] = 'เมนูผัดไทยราคา 65 บาทค่ะ'` | `final_response_message` = 'เมนูผัดไทยราคา 65 บาทค่ะ' **`tool_or_sql_command`** = **'SQL: SELECT price FROM menu WHERE menu_name LIKE "%ผัดไทย%"'** |
 
-## 6. ตัวอย่างการไหลข้อมูลการเรียก RAG Tool
+## 5.2 ตัวอย่างการไหลข้อมูลการเรียก RAG Tool
 | ขั้นตอน | ข้อมูล Input/Action | การไหลของข้อมูลใน `response['intermediate_steps']` | ผลลัพธ์สุดท้ายที่บันทึก |
 | --- | --- | --- | --- |
 | **Input** | `"ร้านอยู่ที่ไหน"` | - | - |
